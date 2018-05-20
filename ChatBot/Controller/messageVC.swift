@@ -147,7 +147,7 @@ class messageVC: UIViewController, UITextFieldDelegate {
 
         let trimmed = message.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedMessage: String = trimmed.replacingOccurrences(of: " ", with: "+", options: .regularExpression)
-        let urlString = "https://www.personalityforge.com/api/chat/?apiKey=6nt5d1nJHkqbkphe&message=\(trimmedMessage)&chatBotID=63906&externalID=chirag1"
+        let urlString = "https://www.personalityforge.com/api/chat/?apiKey=YOUR_API_KEY_HERE&message=\(trimmedMessage)&chatBotID=63906&externalID=chirag1"
         
         let url = URL(string: urlString)
         
