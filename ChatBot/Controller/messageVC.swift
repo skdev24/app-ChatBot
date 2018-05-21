@@ -170,7 +170,7 @@ class messageVC: UIViewController, UITextFieldDelegate {
 
         let unsafeChars = CharacterSet.alphanumerics.inverted
         let newTrimmedMessage: String = trimmed.components(separatedBy: unsafeChars).joined(separator: "+")
-        //MARK:- ENTER YOUR API KEY HERE
+        //MARK:- ENTER YOUR API KEY
         let urlString = "https://www.personalityforge.com/api/chat/?apiKey=YOUR_API_KEY_HERE&message=\(newTrimmedMessage)&chatBotID=63906&externalID=chirag1"
         print("STRING: \(urlString)")
         let url = URL(string: urlString)
