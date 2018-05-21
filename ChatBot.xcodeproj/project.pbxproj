@@ -19,6 +19,8 @@
 		B5254A6E20B00C4B00C6AB66 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5254A6D20B00C4B00C6AB66 /* Message.swift */; };
 		B5254A7020B0114E00C6AB66 /* BotMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5254A6F20B0114E00C6AB66 /* BotMessage.swift */; };
 		B5254A7220B0311800C6AB66 /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5254A7120B0311800C6AB66 /* ContactCell.swift */; };
+		B5254AA320B2892800C6AB66 /* SwiftGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5254AA220B2892800C6AB66 /* SwiftGif.swift */; };
+		B5254AAD20B2B9A200C6AB66 /* typing.gif in Resources */ = {isa = PBXBuildFile; fileRef = B5254AAC20B2B9A200C6AB66 /* typing.gif */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,8 @@
 		B5254A6D20B00C4B00C6AB66 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		B5254A6F20B0114E00C6AB66 /* BotMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotMessage.swift; sourceTree = "<group>"; };
 		B5254A7120B0311800C6AB66 /* ContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
+		B5254AA220B2892800C6AB66 /* SwiftGif.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftGif.swift; sourceTree = "<group>"; };
+		B5254AAC20B2B9A200C6AB66 /* typing.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = typing.gif; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +100,8 @@
 				B5254A6720AFEE0C00C6AB66 /* ChatMessageCell.swift */,
 				B5254A6B20B0008500C6AB66 /* PaddingLbl.swift */,
 				B5254A7120B0311800C6AB66 /* ContactCell.swift */,
+				B5254AA220B2892800C6AB66 /* SwiftGif.swift */,
+				B5254AAC20B2B9A200C6AB66 /* typing.gif */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -167,6 +173,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5254AAD20B2B9A200C6AB66 /* typing.gif in Resources */,
 				B520418420AF47B20086BBE6 /* LaunchScreen.storyboard in Resources */,
 				B520418120AF47B20086BBE6 /* Assets.xcassets in Resources */,
 				B520417C20AF47AF0086BBE6 /* Main.storyboard in Resources */,
@@ -184,6 +191,7 @@
 				B5254A6A20AFEF4F00C6AB66 /* messageVC.swift in Sources */,
 				B520417920AF47AF0086BBE6 /* ChatBotVC.swift in Sources */,
 				B5254A6C20B0008500C6AB66 /* PaddingLbl.swift in Sources */,
+				B5254AA320B2892800C6AB66 /* SwiftGif.swift in Sources */,
 				B5254A6820AFEE0C00C6AB66 /* ChatMessageCell.swift in Sources */,
 				B520417F20AF47AF0086BBE6 /* ChatBot.xcdatamodeld in Sources */,
 				B5254A7020B0114E00C6AB66 /* BotMessage.swift in Sources */,

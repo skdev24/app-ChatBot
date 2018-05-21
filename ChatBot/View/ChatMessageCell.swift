@@ -13,11 +13,11 @@ class ChatMessageCell: UITableViewCell {
     
     @IBOutlet weak var rightLbl: UILabel!
     @IBOutlet weak var leftLbl: UILabel!
-
+    @IBOutlet weak var typingView: UIImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        
+                
         rightLbl.layer.borderWidth = 1.0
         rightLbl.layer.borderColor = #colorLiteral(red: 0.3858584166, green: 0.5081222653, blue: 0.973092854, alpha: 1)
         
@@ -32,10 +32,12 @@ class ChatMessageCell: UITableViewCell {
     }
     
     func updateRight(rightLblMessage: String) {
+        typingView.isHidden = true
         rightLbl.isHidden = false
         rightLbl.text = rightLblMessage
     }
     func updateLeft(leftLblMessage: String) {
+        typingView.isHidden = true
         leftLbl.isHidden = false
         leftLbl.text = leftLblMessage
     }

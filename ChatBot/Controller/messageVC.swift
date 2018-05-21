@@ -22,7 +22,6 @@ class messageVC: UIViewController, UITextFieldDelegate {
     
     var messages: [Lmessages] = []
     
-    
     var positionNumber = 0
     
     
@@ -30,10 +29,11 @@ class messageVC: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         
+        
         self.tableView.separatorStyle = .none
 
-        self.tableView.rowHeight = UITableViewAutomaticDimension;
-        self.tableView.estimatedRowHeight = 28.0;
+        tableView.estimatedRowHeight = 44.0
+        tableView.rowHeight = UITableViewAutomaticDimension
         
         textFieldMessage.delegate = self
         sendMessageBtn.layer.borderWidth = 1.0
@@ -64,15 +64,29 @@ class messageVC: UIViewController, UITextFieldDelegate {
     @IBAction func sendMessageBtnWasPressed(_ sender: Any) {
         if textFieldMessage.text != "" {
             save(message: textFieldMessage.text!, position: positionNumber, side: .right)
-            fetch()
             self.positionNumber += 1
-            self.getJsonvalue(message: self.textFieldMessage.text!)
+            isTyping(indexPathValue: messages.count + 1)
+            fetch()
+            print("FIRST: \(messages.count)")
+//            if self.messages.count >= 5 {
+//                self.reloadData()
+//            } else {
+//                self.tableView.reloadData()
+//            }
             self.tableView.reloadData()
+            self.tableView.scrollToBottom()
+            self.getJsonvalue(message: self.textFieldMessage.text!)
         }
         
         
         textFieldMessage.text = ""
     }
+    
+    func isTyping(indexPathValue: Int) {
+        save(message: "isTyping", position: indexPathValue, side: .left)
+        fetch()
+    }
+    
     
     @IBAction func deleteCoreData(_ sender: Any) {
         deleteAllRecords()
@@ -81,19 +95,24 @@ class messageVC: UIViewController, UITextFieldDelegate {
     }
     
     
-    func deleteAllRecords() {
-        let delegate = UIApplication.shared.delegate as! AppDelegate
-        let context = delegate.persistentContainer.viewContext
+    func deleteAllRecords(name: String = "", indexVlaue: Int = 0) {
+        let context = appDelegate?.persistentContainer.viewContext
         
         let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Lmessages")
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
         
-        do {
-            try context.execute(deleteRequest)
-            try context.save()
-        } catch {
-            print ("There was an error")
+        if name == "isTyping" {
+            context?.delete(messages[indexVlaue-1] as NSManagedObject)
+            print("SECOND: \(messages.count)")
+        } else {
+            do {
+                try context?.execute(deleteRequest)
+                try context?.save()
+            } catch {
+                print ("There was an error")
+            }
         }
+        
     }
     
     
@@ -133,11 +152,13 @@ class messageVC: UIViewController, UITextFieldDelegate {
         }
     }
     func reloadData(){
-        tableView.reloadData()
+        self.tableView.reloadData()
         DispatchQueue.main.async {
-            let scrollPoint = CGPoint(x: 0, y: self.tableView.contentSize.height - self.tableView.frame.size.height + 20)
+//                self.tableView.contentSize.height - UIScreen.main.bounds.height
+            let scrollPoint = CGPoint(x: 0, y: self.tableView.contentSize.height - self.tableView.frame.size.height + 40)
             self.tableView.setContentOffset(scrollPoint, animated: true)
         }
+        
     }
     
     
@@ -146,9 +167,12 @@ class messageVC: UIViewController, UITextFieldDelegate {
 
 
         let trimmed = message.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedMessage: String = trimmed.replacingOccurrences(of: " ", with: "+", options: .regularExpression)
-        let urlString = "https://www.personalityforge.com/api/chat/?apiKey=YOUR_API_KEY_HERE&message=\(trimmedMessage)&chatBotID=63906&externalID=chirag1"
-        
+
+        let unsafeChars = CharacterSet.alphanumerics.inverted
+        let newTrimmedMessage: String = trimmed.components(separatedBy: unsafeChars).joined(separator: "+")
+        //MARK:- ENTER YOUR API KEY HERE
+        let urlString = "https://www.personalityforge.com/api/chat/?apiKey=YOUR_API_KEY_HERE&message=\(newTrimmedMessage)&chatBotID=63906&externalID=chirag1"
+        print("STRING: \(urlString)")
         let url = URL(string: urlString)
         
         URLSession.shared.dataTask(with: url!) { (data, response, error) in
@@ -158,16 +182,16 @@ class messageVC: UIViewController, UITextFieldDelegate {
             
             do {
                 let json = try JSONDecoder().decode(BotMessage.self, from: data)
-                
+                self.deleteAllRecords(name: "isTyping", indexVlaue: self.messages.count)
+                self.fetch()
                 self.save(message: json.message.message, position: self.positionNumber, side: .left)
                 self.fetch()
-                
             } catch let error {
                 print("\(error)")
             }
             
             DispatchQueue.main.async {
-                if self.positionNumber >= 5 {
+                if self.messages.count >= 5 {
                     self.reloadData()
                 } else {
                     self.tableView.reloadData()
@@ -192,17 +216,28 @@ extension messageVC: UITableViewDelegate, UITableViewDataSource{
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "chatMessageCell", for: indexPath) as! ChatMessageCell
-        let message = messages[indexPath.row]
-
-        if message.side == "right"{
+        
+            let message = messages[indexPath.row]
+            
+            if message.side == "right"{
+                cell.typingView.isHidden = true
                 cell.leftLbl.isHidden = true
                 cell.rightLbl.layer.backgroundColor = #colorLiteral(red: 0.3858584166, green: 0.5081222653, blue: 0.973092854, alpha: 0.309770976)
-            cell.updateRight(rightLblMessage: message.message!)
+                cell.rightLbl.layer.bounds.size.height = 40
+                cell.updateRight(rightLblMessage: message.message!)
+                
+            } else if message.side == "left" && message.message == "isTyping"{
+                print("I RRRURURURURURURUNNNNNN")
+                cell.rightLbl.isHidden = true
+                cell.leftLbl.isHidden = true
+                cell.typingView.isHidden = false
+                cell.typingView.loadGif(name: "typing")
             } else {
+                cell.typingView.isHidden = true
                 cell.rightLbl.isHidden = true
                 cell.leftLbl.layer.backgroundColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 0.3)
                 cell.updateLeft(leftLblMessage: message.message!)
-            }
+        }
         
         
 //        NSIndexPath(forRow: rows - 1, inSection: sections - 1)
@@ -210,10 +245,22 @@ extension messageVC: UITableViewDelegate, UITableViewDataSource{
     }
     private func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: IndexPath) {
         let lastRowIndex = tableView.numberOfRows(inSection: 0)
-        if indexPath.row == lastRowIndex - 1 {
+        if indexPath.row == lastRowIndex - 2 {
             tableView.scrollToBottom(animated: true)
         }
     }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        let message = messages[indexPath.row]
+        
+        if message.side == "right"{
+            return 40
+        } else {
+            return tableView.estimatedRowHeight
+        }
+        
+    }
+    
 }
 
 extension UITableView {
